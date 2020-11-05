@@ -50,7 +50,7 @@ void func2(int f2d) {
 /*@unused@*/
 
 void func3(int f3d){   
-     char *buf3;
+     char *buf3 = NULL;
      int len = 0;
      ssize_t returnvar = 0;
      returnvar = read(f3d, &len, sizeof(len));
