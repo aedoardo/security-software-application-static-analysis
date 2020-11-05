@@ -59,13 +59,11 @@ void main()
     func1();
     func3(len(*boo));
     
-    FILE *aFile = freopen("/tmp/tmpfile", "w", stdout);
-    if((aFile=freopen()) == NULL) {
-        return;
-    } else {
-        fprintf(aFile, "%s", "hello world");
-        fclose(aFile);
-    }
+    FILE *aFile = fopen("/tmp/tmpfile", "w");
+  
+    fprintf(aFile, "%s", "hello world");
+    fclose(aFile);
+    
 }
 
 

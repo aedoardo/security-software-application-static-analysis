@@ -105,7 +105,7 @@ int main() {
         return -1;
     }
 
-    FILE *aFile = freopen("/tmp/tmpfile", "w", stdout);
+    FILE *aFile = fopen("/tmp/tmpfile", "w");
 
     if(aFile == NULL) {
         // error
