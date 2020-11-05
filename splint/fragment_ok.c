@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <ctype.h>
+#include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
+
 
 void func1()
 {	
@@ -20,10 +22,11 @@ void func1()
 
 /* f2d and f3d are file descriptors obtained after opening files*/
 
-/*@unused@*/ 
+
 void func2(int f2d) {   
      size_t len = 0;    
-     ssize_t retvar = read(f2d, &len, sizeof(len)); // signed size_t
+     ssize_t retvar;
+     retvar = read(f2d, &len, sizeof(len)); // signed size_t
 
      if(retvar < 0) {
           // we have an error
@@ -33,6 +36,7 @@ void func2(int f2d) {
           // check the buf2
           if(buf2 == NULL) {
                // give some error
+               return;
           }
 
           // re-use retvar to check the length of read
@@ -44,17 +48,18 @@ void func2(int f2d) {
           } else {
                buf2[retvar] = '\0'; // add terminator
                free(buf2); // free the memory to avoid memory leaks
+               return;
           }
      }
 } 
-/*@unused@*/
+
 
 void func3(int f3d){   
      char *buf3 = NULL;
-     int len = 0;
+     size_t len = 0;
      ssize_t returnvar = 0;
      returnvar = read(f3d, &len, sizeof(len));
-     if(returnvar < 0) {
+     if(returnvar < 0 || returnvar == NULL) {
           // show some error and return
           return;
      } else {
@@ -65,6 +70,11 @@ void func3(int f3d){
 
           // initialize buf3.
           buf3 = calloc((size_t)len, sizeof(char));
+
+          if(buf3 == NULL) {
+               return;
+          }
+
           returnvar = read(f3d, buf3, len);
           if(returnvar < 0) {
                // show some error and free
@@ -80,7 +90,7 @@ void func3(int f3d){
 }
 
 
-void main()
+int main()
 {
      char *boo = "boooooooooooooooooooooooooooooooooooooooooooooo";
      char *buffer = (char *)malloc(10 * sizeof(char));
