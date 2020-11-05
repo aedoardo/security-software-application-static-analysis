@@ -5,7 +5,7 @@
 #include <stdlib.h>
 
 
-void func1()
+static void func1()
 {	
      char buffer[1024];
      printf("Please enter your user id :");
@@ -54,7 +54,7 @@ void func2(int f2d) {
 } 
 
 
-void func3(int f3d){   
+static void func3(int f3d){   
      char *buf3 = NULL;
      size_t len = 0;
      ssize_t returnvar = 0;
@@ -86,6 +86,8 @@ void func3(int f3d){
           }
          
      }
+
+     return;
            
 }
 
