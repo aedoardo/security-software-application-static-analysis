@@ -3,8 +3,9 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
+#include <bsd/string.h>
 
-ssize_t func1() {
+static ssize_t func1() {
     char buffer[1024];
     if(fgets(buffer, 1024, stdin) != NULL) {
         if(!isalpha(buffer[0])) {
@@ -18,7 +19,8 @@ ssize_t func1() {
     return 0;
 }
 
-ssize_t func2(int f2d) {
+/*@unused@*/
+static ssize_t func2(int f2d) {
     char *buf2 = NULL;
     size_t len = 0;
     size_t limit = 1024;
@@ -48,7 +50,7 @@ ssize_t func2(int f2d) {
     return 0;
 }
 
-ssize_t func3(int f3d) {
+static ssize_t func3(int f3d) {
     char *buf3 = NULL;
     size_t len = 0;
     ssize_t returnvar = 0;
