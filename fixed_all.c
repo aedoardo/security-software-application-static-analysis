@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <bsd/string.h>
 
+
 static ssize_t func1() {
     char buffer[1024];
     if(fgets(buffer, 1024, stdin) != NULL) {
@@ -50,6 +51,7 @@ static ssize_t func2(int f2d) {
     return 0;
 }
 
+/*@unused@*/
 static ssize_t func3(int f3d) {
     char *buf3 = NULL;
     size_t len = 0;
@@ -84,6 +86,7 @@ int main() {
     char *boo = "boooooooooooooooooooooooooooooooooooooooooooooo";
     char *buffer = (char *)malloc(10 * sizeof(char));
     ssize_t returnvar = 0;
+    FILE *aFile = NULL;
 
     if(buffer == NULL) {
         // buffer is not allocated, so error
@@ -98,20 +101,30 @@ int main() {
         return -1;
     }
 
-    int intlengthboo = (int)(sizeof(*boo));
-    
-    returnvar = func3(intlengthboo);
-
     if(returnvar < 0) {
         free(buffer);
         return -1;
     }
 
-    FILE *aFile = fopen("/tmp/tmpfile", "w");
+    char safeFile[20]; // false positive
+    int fd = -1;
+
+    strlcpy(safeFile, "/tmp/tmpfile", sizeof(safeFile));
+
+    fd = mkostemp(safeFile, O_EXCL);
+
+    if(fd < 0) {
+        free(buffer);
+        free(safeFile);
+        return -1;
+    }
+
+    aFile = fdopen(fd, "w");
 
     if(aFile == NULL) {
         // error
         free(buffer); // avoid memory leaks
+        free(safeFile);
         return -1;
     }
 
@@ -119,6 +132,7 @@ int main() {
     retfprint = fprintf(aFile, "%s", "hello world");
 
     if(retfprint < 0) {
+        free(safeFile);
         free(buffer);
         return -1;
     }
@@ -126,6 +140,7 @@ int main() {
     (void) fclose(aFile);
 
     free(buffer); // release memory
+    free(safeFile);
 
     return 0;
 }
